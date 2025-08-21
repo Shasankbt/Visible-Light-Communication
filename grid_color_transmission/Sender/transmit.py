@@ -10,7 +10,7 @@ BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 
-DISPLAY_TIME = 0.1     # seconds for bit display
+DISPLAY_TIME = 0.5     # seconds for bit display
 
 
 def msg_to_color(bits, grid_size):
@@ -79,6 +79,10 @@ class Transmitter:
             pygame.draw.line(self.screen, BLACK, (i * self.cell_width , 0), (i * self.cell_width, self.height), 3)
             pygame.draw.line(self.screen, BLACK, (0, i * self.cell_height), (self.width, i * self.cell_height), 3)  
         pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
     def clear_screen(self):
         self.screen.fill(GREEN) 
@@ -89,6 +93,10 @@ class Transmitter:
             pygame.draw.line(self.screen, BLACK, (0, i * self.cell_height), (self.width, i * self.cell_height), 3)         
 
         pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
     def transmit_bits(self, bits):
         color_sequence = msg_to_color(bits, self.grid_size)

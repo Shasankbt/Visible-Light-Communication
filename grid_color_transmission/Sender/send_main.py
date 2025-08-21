@@ -6,7 +6,7 @@ from pathlib import Path
 from encode import encode_message
 from transmit import Transmitter
 
-GRID_SIZE = 6
+GRID_SIZE = 1
 
 def read_bits_from_file(file_path):
     try:

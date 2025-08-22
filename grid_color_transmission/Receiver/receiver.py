@@ -6,7 +6,7 @@ from find_window import GetFrame
 from color_classify import get_current_colors
 import time
 
-GRID_LENGTH = 6
+GRID_LENGTH = 3
 
 class Receiver:
     def __init__(self):

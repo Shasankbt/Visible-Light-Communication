@@ -10,35 +10,40 @@ BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 
-DISPLAY_TIME = 0.5     # seconds for bit display
+DISPLAY_TIME = 1.0     # seconds for bit display
 
 
 def msg_to_color(bits, grid_size):
-    total_bits = grid_size * grid_size
 
-    if len(bits) % total_bits != 0:
-        pad_len = total_bits - (len(bits) % total_bits)
-        bits += "0" * pad_len
+    def pad(bits):
+        total_bits = grid_size * grid_size
+        if len(bits) % total_bits != 0:
+            pad_len = total_bits - (len(bits) % total_bits)
+            bits += "0" * pad_len
+        return bits
     
-    bits = np.array([int(bit) for bit in bits]).reshape(-1, grid_size, grid_size)
-
-    color_sequence = []
-
-    color_sequence.append([[GREEN] * grid_size for _ in range(grid_size)])
-    
-    for batch in bits:
+    def bits_to_grid(bits, prev_batch):
         color_batch = []
         for i in range(grid_size):
             row = []
             for j in range(grid_size):
-                if batch[i][j] == 1:
-                    row.append(WHITE)
-                else:
-                    row.append(BLACK)
+                color = (WHITE if bits[i][j] == 1 else BLACK)
+                color = (BLUE if color == prev_batch[i][j] else color)
+                row.append(color)
             color_batch.append(row)
+        return color_batch
+    
+    bits = pad(bits)
+    bits = np.array([int(bit) for bit in bits])
+    bits = bits.reshape(-1, grid_size, grid_size)
 
+    color_sequence = []
+
+    color_sequence.append([[GREEN] * grid_size for _ in range(grid_size)])
+
+    for batch in bits:
+        color_batch = bits_to_grid(batch, color_sequence[-1])
         color_sequence.append(color_batch)
-        color_sequence.append([[BLUE] * grid_size for _ in range(grid_size)])
 
     color_sequence.append([[RED] * grid_size for _ in range(grid_size)])
 

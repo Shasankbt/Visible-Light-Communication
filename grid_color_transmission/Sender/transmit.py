@@ -47,6 +47,7 @@ def msg_to_color(bits, grid_size):
 
     color_sequence.append([[RED] * grid_size for _ in range(grid_size)])
 
+    print(color_sequence)
     return color_sequence
 
 class Transmitter:

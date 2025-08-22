@@ -57,8 +57,7 @@ class Receiver:
         if (
             "UNKNOWN" in colors or
             ("GREEN" in colors and not self.is_color(colors, "GREEN")) or
-            ("RED" in colors and not self.is_color(colors, "RED")) or
-            ("BLUE" in colors and not self.is_color(colors, "BLUE"))
+            ("RED" in colors and not self.is_color(colors, "RED"))
         ):
             print("Unknown color detected, waiting for valid sequence...")
             print(f"RGB values: {rgb}")

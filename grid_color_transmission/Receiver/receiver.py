@@ -6,7 +6,7 @@ from find_window import GetFrame
 from color_classify import get_current_colors
 import time
 
-GRID_LENGTH = 8
+GRID_LENGTH = 6
 
 class Receiver:
     def __init__(self):
@@ -48,11 +48,12 @@ class Receiver:
             print("Failed to read frame from camera.")
             return None
         frame = cv2.warpPerspective(frame, self.M, (self.w, self.h))
-        # cv2.imshow("Frame", frame)
+        cv2.imshow("Frame", frame)
+        
         key = cv2.waitKey(1) & 0xFF
         return frame
     
-    def _contains_unknown_color(self, colors):
+    def _contains_unknown_color(self, colors, rgb):
         if (
             "UNKNOWN" in colors or
             ("GREEN" in colors and not self.is_color(colors, "GREEN")) or
@@ -60,7 +61,10 @@ class Receiver:
             ("BLUE" in colors and not self.is_color(colors, "BLUE"))
         ):
             print("Unknown color detected, waiting for valid sequence...")
+            print(f"RGB values: {rgb}")
             return True
+        
+        return False
     
     def is_color(self, colors, target_color):
         return np.all(np.array(colors) == target_color)
@@ -69,7 +73,7 @@ class Receiver:
         color = None
 
         while color is None or not self.is_color(color, "GREEN"):
-            color, _ = get_current_colors(self.getFrame(), GRID_LENGTH)
+            color, rgb = get_current_colors(self.getFrame(), GRID_LENGTH)
             if color is None:
                 continue
 
@@ -77,12 +81,12 @@ class Receiver:
 
         while (
             color is None or
-            self._contains_unknown_color(color) or
+            self._contains_unknown_color(color, rgb) or
             self.is_color(color, "GREEN")
         ):  
             # print(color)
             start = time.time()
-            color, _ = get_current_colors(self.getFrame(), GRID_LENGTH)
+            color, rgb = get_current_colors(self.getFrame(), GRID_LENGTH)
 
         print("Start of frame")
         
@@ -93,15 +97,17 @@ class Receiver:
 
 
         while True:
-            color, _ = get_current_colors(self.getFrame(), GRID_LENGTH)
+            color, rgb = get_current_colors(self.getFrame(), GRID_LENGTH)
             # print(color)
+
+
 
             if self.is_color(color, "RED"):
                 print("Detected RED, stopping the sequence")
                 break
 
             if (
-                self._contains_unknown_color(color) or
+                self._contains_unknown_color(color, rgb) or
                 self.is_color(color, "GREEN") or
                 color == color_sequence[-1]
             ):

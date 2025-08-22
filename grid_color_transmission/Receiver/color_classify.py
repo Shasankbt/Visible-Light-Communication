@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 def classify_color(frame):
-    def trimmed_mean(channel, trim_ratio=0.9):
+    def trimmed_mean(channel, trim_ratio=0.5):
         flat = channel.ravel()
         k = int(len(flat) * trim_ratio)
         # partition puts kth element in place, lower values before it (unsorted)
@@ -15,10 +15,10 @@ def classify_color(frame):
     g = trimmed_mean(g)
     r = trimmed_mean(r)
 
-    if r < 100 and g < 100 and b < 100:
+    if r < 150 and g < 150 and b < 150:
         return "BLACK", (int(r), int(g), int(b))
     
-    if r > 150 and g > 150 and b > 150:
+    if r > 180 and g > 180 and b > 180:
         return "WHITE", (int(r), int(g), int(b))
     
     max_color = max(r, g, b, 200)
@@ -35,23 +35,26 @@ def classify_color(frame):
         return "UNKNOWN", (int(r), int(g), int(b))
 
 
-def get_current_colors(frame, grid_length):
+def get_current_colors(frame, grid_length, grid_trim = 0.1):
     start_time = time.time()
 
     small_frame = cv2.resize(frame, (120, 120))
     h, w = small_frame.shape[:2]
     cell_h, cell_w = h // grid_length, w // grid_length
+    dy = int(grid_trim * cell_h / 2)
+    dx = int(grid_trim * cell_w / 2)
 
     colors = []
     rgbs = []
 
     for i in range(grid_length):
         for j in range(grid_length):
-            cell = small_frame[i*cell_h:(i+1)*cell_h, j*cell_w:(j+1)*cell_w]
+            cell = small_frame[i*cell_h + dy:(i+1)*cell_h - dy, j*cell_w + dx:(j+1)*cell_w - dx]
             color, rgb_vals = classify_color(cell)
             colors.append(color)
             rgbs.append(rgb_vals)
 
     # cv2.imshow("Frame", small_frame)
     key = cv2.waitKey(1) & 0xFF
+    # print(rgbs)
     return colors, rgbs

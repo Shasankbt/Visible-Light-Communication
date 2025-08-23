@@ -5,7 +5,7 @@ MAX_BODY_SIZE = 20
 GRID_HT = 6
 GRID_WT = 6
 
-def encode_message(message: np.ndarray) -> np.ndarray:
+def encode_message(message: np.ndarray,errorwhere=0,error_pos=-1) -> np.ndarray:
     msg_len = len(message)
 
     if msg_len > MAX_BODY_SIZE:
@@ -35,8 +35,11 @@ def encode_message(message: np.ndarray) -> np.ndarray:
         encoded[GRID_HT - 1, r] = get_parity_bit(encoded[:GRID_HT - 1, r])
 
     encoded[GRID_HT - 1, GRID_WT - 1] = get_parity_bit(encoded[GRID_HT - 1, :GRID_WT - 1])
-
-
+    if errorwhere==0:
+        if error_pos<=msg_len-1 and error_pos>=0:
+            encoded[error_pos//(GRID_WT-1)+1,error_pos%(GRID_WT-1)]^=1
+    else:
+        encoded[error_pos//(GRID_WT),error_pos%(GRID_WT)]=-1
     return encoded
 
 if __name__ == "__main__":

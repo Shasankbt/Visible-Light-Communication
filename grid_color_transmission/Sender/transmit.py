@@ -9,8 +9,9 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
+UNKNOWN = (50, 50, 50)
 
-DISPLAY_TIME = 1.0     # seconds for bit display
+DISPLAY_TIME = 0.25     # seconds for bit display
 
 
 def msg_to_color(bits, grid_size):
@@ -29,6 +30,7 @@ def msg_to_color(bits, grid_size):
             for j in range(grid_size):
                 color = (WHITE if bits[i][j] == 1 else BLACK)
                 color = (BLUE if color == prev_batch[i][j] else color)
+                color = (UNKNOWN if bits[i][j] == -1 else color)
                 row.append(color)
             color_batch.append(row)
         return color_batch

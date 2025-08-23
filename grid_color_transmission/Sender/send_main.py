@@ -46,12 +46,14 @@ def main():
             while True:
                 try:
                     message = input("Enter a binary message (0s and 1s) to encode: ")
+                    errorwhere = input("Enter 0 for injecting error in original message or 1 for injecting error in medium")
+                    error_pos = input("Enter the bit position to inject error (0-indexed): ")
                     bits = np.array([int(bit) for bit in message if bit in '01'])
                     if len(bits) == 0:
                         print("Error: No valid binary digits entered. Please enter only 0s and 1s.")
                         continue
                     
-                    encoded_message = encode_message(bits)
+                    encoded_message = encode_message(bits, int(errorwhere), int(error_pos))
                     
                     print("Encoded message:\n", encoded_message)
                     transmitter.transmit_bits(encoded_message.flatten().astype(str))

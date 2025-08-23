@@ -11,7 +11,7 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 UNKNOWN = (50, 50, 50)
 
-DISPLAY_TIME = 0.25     # seconds for bit display
+DISPLAY_TIME = 1.0     # seconds for bit display
 
 
 def msg_to_color(bits, grid_size):
@@ -55,7 +55,10 @@ def msg_to_color(bits, grid_size):
 class Transmitter:
     def __init__(self, grid_size=3):
         pygame.init()
-        self.screen = pygame.display.set_mode((1200, 800))
+        info = pygame.display.Info()
+        self.screen = pygame.display.set_mode(
+            (info.current_w, info.current_h)
+        )
         self.width, self.height = self.screen.get_size()
         self.cell_width = self.width // grid_size
         self.cell_height = self.height // grid_size
@@ -77,6 +80,22 @@ class Transmitter:
 
     def __del__(self):
         pygame.quit()
+
+    def poll_events(self):
+        polling = True
+        while polling:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                        print("Enter pressed, stopping polling.")
+                        polling = False
+
+            # keep screen responsive
+            pygame.display.flip()
+
 
     def _fill_grid(self, color):
         for i in range(self.grid_size):
@@ -101,6 +120,8 @@ class Transmitter:
             pygame.draw.line(self.screen, BLACK, (0, i * self.cell_height), (self.width, i * self.cell_height), 3)         
 
         pygame.display.flip()
+        time.sleep(DISPLAY_TIME)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

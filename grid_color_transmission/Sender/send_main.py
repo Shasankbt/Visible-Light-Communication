@@ -12,11 +12,13 @@ def Send(transmitter, message, errorwhere, error_pos):
         msg_len = len(encoded)
         if errorwhere==0:
             if error_pos<=msg_len-1 and error_pos>=0:
-                encoded[error_pos//(encoded_size-1)+1, error_pos%(encoded_size-1)]^=1
+                encoded[error_pos//(encoded_size-1)+1, error_pos%(encoded_size-1)] ^= 1
         else:
-            encoded[error_pos//(encoded_size), error_pos%(encoded_size)]=-1
+            encoded[error_pos//(encoded_size), error_pos%(encoded_size)] ^= 1
 
         return encoded
+    
+    
     bits = np.array([int(bit) for bit in message if bit in '01'])
     if len(bits) == 0:
         print("Error: No valid binary digits entered. Please enter only 0s and 1s.")
@@ -42,9 +44,11 @@ def read_from_file(transmitter, file_path):
                 errorwhere = entry["errorwhere"]
                 error_pos = entry["errorpos"]
 
-                _ = input(f"Press Enter to transmit the next message: {bits} with errorwhere={errorwhere} and error_pos={error_pos}")
+                transmitter.poll_events()
 
                 Send(transmitter, bits, errorwhere, error_pos)
+
+            transmitter.poll_events()
     except ValueError as e:
         print(f"Error: {e}")
     

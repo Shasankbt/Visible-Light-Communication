@@ -15,10 +15,10 @@ def classify_color(frame):
     g = trimmed_mean(g)
     r = trimmed_mean(r)
 
-    if r < 130 and g < 130 and b < 130:
+    if r < 150 and g < 150 and b < 150:
         return "BLACK", (int(r), int(g), int(b))
     
-    if r > 140 and g > 140 and b > 140:
+    if r > 170 and g > 170 and b > 170:
         return "WHITE", (int(r), int(g), int(b))
     
     max_color = max(r, g, b, 200)

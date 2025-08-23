@@ -7,7 +7,7 @@ from color_classify import get_current_colors
 import time
 
 GRID_LENGTH = 3
-DISPLAY_TIME = 0.25
+DISPLAY_TIME = 1.0
 
 class Receiver:
     def __init__(self):
@@ -63,6 +63,7 @@ class Receiver:
         
         elif colors.count("UNKNOWN") >= 2 :
             print("At least 2 UNKNOWN colors detected, waiting for valid sequence...")
+            print(f"RGB values: {rgb}")
             return True
         
         

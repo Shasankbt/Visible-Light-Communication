@@ -6,7 +6,7 @@
     },
     {
         "bits": "11010010",
-        "errorwhere": 1,
+        "errorwhere": 0,
         "errorpos": 5
     }
 ]

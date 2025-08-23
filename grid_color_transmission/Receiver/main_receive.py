@@ -51,6 +51,8 @@ if __name__ == "__main__":
             decoded_message = decode_message_str(msg)
             print(f"Decoded message as array: {decoded_message}")
             print("-" * 40)
+            # print(f"Error detected at index: {error_index}" if error_index != 0 else "No error detected.")
+            print("-" * 40)
         except ValueError as e:
             print(f"Error decoding message: {e}")
         

@@ -22,6 +22,8 @@ def color_to_msg(color_sequence):
                     bits += "1"
                 elif frame[i] == "BLACK":
                     bits += "0"
+                elif frame[i] == "UNKNOWN":
+                    bits += "0"
         # print(f"Frame: {frame}, Bits: {bits}")
         return bits
 

@@ -54,13 +54,17 @@ class Receiver:
     
     def _contains_unknown_color(self, colors, rgb):
         if (
-            "UNKNOWN" in colors or
             ("GREEN" in colors and not self.is_color(colors, "GREEN")) or
             ("RED" in colors and not self.is_color(colors, "RED"))
         ):
             print("Unknown color detected, waiting for valid sequence...")
             print(f"RGB values: {rgb}")
             return True
+        
+        elif colors.count("UNKNOWN") >= 2 :
+            print("At least 2 UNKNOWN colors detected, waiting for valid sequence...")
+            return True
+        
         
         return False
     

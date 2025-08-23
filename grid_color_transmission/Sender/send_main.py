@@ -31,8 +31,9 @@ def main():
         if args.file:
             # File mode: read from file and transmit once
             print(f"Reading binary message from file: {args.file}")
-            encoded_messages = read_bits_from_file(args.file)
-
+            messages = read_bits_from_file(args.file)
+            raise NotImplementedError("File mode not implemented")
+            encoded_messages = [encode_message(np.array([int(bit) for bit in message if bit in '01'])) for message in messages]
             input("press any key to start transmission...")
             
             for encoded_message in encoded_messages:
@@ -48,12 +49,17 @@ def main():
                     message = input("Enter a binary message (0s and 1s) to encode: ")
                     errorwhere = input("Enter 0 for injecting error in original message or 1 for injecting error in medium")
                     error_pos = input("Enter the bit position to inject error (0-indexed): ")
+
+
                     bits = np.array([int(bit) for bit in message if bit in '01'])
                     if len(bits) == 0:
                         print("Error: No valid binary digits entered. Please enter only 0s and 1s.")
                         continue
                     
+
                     encoded_message = encode_message(bits, int(errorwhere), int(error_pos))
+
+
                     
                     print("Encoded message:\n", encoded_message)
                     transmitter.transmit_bits(encoded_message.flatten().astype(str))

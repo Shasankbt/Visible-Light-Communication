@@ -1,0 +1,12 @@
+[
+    {
+        "bits": "11010010",
+        "errorwhere": 0,
+        "errorpos": 3
+    },
+    {
+        "bits": "11010010",
+        "errorwhere": 1,
+        "errorpos": 5
+    }
+]

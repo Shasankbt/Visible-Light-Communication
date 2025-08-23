@@ -30,10 +30,8 @@ def color_to_msg(color_sequence):
     for i in range(1, len(color_sequence)):
         msg += get_frame_bits(color_sequence[i], color_sequence[i-1])
 
-
     print(f"Decoded message: {msg}")
     return msg
-
 
 if __name__ == "__main__":
     receiver = Receiver()

@@ -31,7 +31,7 @@ def GetFrame(cap, frame_name):
         cv2.imshow(frame_name, frame)
 
         key = cv2.waitKey(1) & 0xFF
-        if key == 27:  # ESC
+        if key == 27:  #ESC
             break
         if len(points) == 4:
             print("Selected 4 points:", points)

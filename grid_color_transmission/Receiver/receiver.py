@@ -7,6 +7,7 @@ from color_classify import get_current_colors
 import time
 
 GRID_LENGTH = 3
+DISPLAY_TIME = 0.25
 
 class Receiver:
     def __init__(self):
@@ -17,7 +18,6 @@ class Receiver:
             print("Error: Could not open camera.")
             exit()
         print("Camera opened successfully.")
-        
         
         pts = GetFrame(self.cap, "Frame")
         if pts is None:
@@ -49,7 +49,6 @@ class Receiver:
             return None
         frame = cv2.warpPerspective(frame, self.M, (self.w, self.h))
         cv2.imshow("Frame", frame)
-        
         key = cv2.waitKey(1) & 0xFF
         return frame
     
@@ -70,9 +69,12 @@ class Receiver:
 
     def receive(self):
         color = None
+        print("Waiting for GREEN to start...")
 
         while color is None or not self.is_color(color, "GREEN"):
             color, rgb = get_current_colors(self.getFrame(), GRID_LENGTH)
+            print(color)
+            print(rgb)
             if color is None:
                 continue
 
@@ -87,20 +89,21 @@ class Receiver:
             start = time.time()
             color, rgb = get_current_colors(self.getFrame(), GRID_LENGTH)
 
-        print("Start of frame")
+        print("Start of frame: ------")
         
         
         color_sequence = []
-        print(color)
+        print(f"Grid-0: {color} at {start}")
         color_sequence.append(color)
 
-
+          # Start time for the
+        batch_num = 1
         while True:
+            while time.time() - start < DISPLAY_TIME * (batch_num + 0.25):
+                pass
+
             color, rgb = get_current_colors(self.getFrame(), GRID_LENGTH)
             # print(color)
-
-
-
             if self.is_color(color, "RED"):
                 print("Detected RED, stopping the sequence")
                 break
@@ -110,11 +113,12 @@ class Receiver:
                 self.is_color(color, "GREEN") or
                 color == color_sequence[-1]
             ):
+                print("Debug Value: ", color, rgb)
                 continue
 
-            # print(f"Detected color: {color}, RGB values: {rgb_vals}")
-            print(color)
-            print(f"Time taken for this color: {time.time() - start:.2f} seconds")
+            print(f"Grid-{batch_num}: {color} at {time.time()}")
             color_sequence.append(color)
+            batch_num += 1
 
+        print("ended reading frame, time taken:", time.time() - start)
         return color_sequence
